@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NetworkImageView">
+        <!-- 占位图 -->
+        <attr name="placeHolder" format="reference"></attr>
+        <attr name="errorImage" format="reference"></attr>
+
+        <!-- 圆 -->
+        <attr name="circle" format="boolean"></attr>
+        <!-- 圆外边框 -->
+        <attr name="BorderWidth" format="dimension"></attr>
+        <attr name="BorderColor" format="color"></attr>
+
+        <!-- 圆角 -->
+        <attr name="borderRadius" format="dimension" />
+        <attr name="android:scaleType" />
+
+        <!-- todo -->
+        <attr name="borderType" format="enum">
+            <enum name="all" value="0" />
+            <enum name="topLeft" value="1" />
+            <enum name="topRight" value="2" />
+            <enum name="bottomLeft" value="3" />
+            <enum name="bottomRight" value="4" />
+            <enum name="top" value="5" />
+            <enum name="bottom" value="6" />
+            <enum name="left" value="7" />
+            <enum name="right" value="8" />
+        </attr>
+
+    </declare-styleable>
+
+</resources>

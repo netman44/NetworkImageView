@@ -1,0 +1,9 @@
+<manifest package="com.network44.networkimage"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+    >
+
+    </application>
+
+</manifest>

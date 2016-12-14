@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NetWorkImageView</string>
+    <string name="title_activity_paint_test">PaintTestActivity</string>
 </resources>
