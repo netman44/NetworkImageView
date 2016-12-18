@@ -18,7 +18,9 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <demo.network44.com.networkimageview.testView.PaintView
+            android:onClick="onClickPaintView"
             android:layout_width="match_parent"
             android:layout_height="5000dp"/>
     </LinearLayout>

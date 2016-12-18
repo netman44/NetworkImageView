@@ -1,8 +1,12 @@
 package demo.network44.com.networkimageview.testView;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
+import android.graphics.DashPathEffect;
+import android.graphics.DiscretePathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -29,6 +33,37 @@ public class PaintView extends View {
     public PaintView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+    ValueAnimator animator;
+    public void startAnimator() {
+        if (isAnimatorRunning()) {
+            animator.cancel();
+        }
+        animator = ValueAnimator.ofFloat(0, 230);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // 3.为目标对象的属性设置计算好的属性值
+                float animatorValue = (float) animation.getAnimatedValue();
+                startAnimatorPhase(animatorValue);
+
+            }
+        });
+        animator.setRepeatMode(ValueAnimator.REVERSE);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setDuration(1000);
+        animator.start();
+    }
+
+    public boolean isAnimatorRunning() {
+        return animator != null && animator.isRunning();
+    }
+
+    public void stopAnimator() {
+        if (animator != null && animator.isRunning()) {
+            animator.cancel();
+        }
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -43,6 +78,91 @@ public class PaintView extends View {
         drawCap(canvas, x, y);
         y += 3 * 50 + 10;
         drawJoin(canvas, x, y);
+        y += 150;
+        x -= 90;
+        drawCornerPathEffect(canvas, x, y);
+        drawDashPathEffect(canvas, x + 300, y);
+
+        y += 200;
+        x = 20;
+        drawDiscretePathEffect(canvas, x, y);
+    }
+
+    private void drawDiscretePathEffect(Canvas canvas, int x, int y) {
+        Paint paint = getPaint();
+        paint.setStrokeWidth(2);
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+
+        Path path = getPath(y);
+        canvas.drawPath(path, paint);
+        path.offset(0, 100);
+        paint.setPathEffect(new DiscretePathEffect(2, 5));
+        canvas.drawPath(path, paint);
+        path.offset(0, 100);
+        paint.setPathEffect(new DiscretePathEffect(6, 5));
+        canvas.drawPath(path, paint);
+        path.offset(0, 100);
+        paint.setPathEffect(new DiscretePathEffect(6, 15));
+        canvas.drawPath(path, paint);
+    }
+
+    private void drawCornerPathEffect(Canvas canvas, int x, int y) {
+        Paint paint = getPaint();
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+
+        Path path = new Path();
+        path.moveTo(x, y + 200);
+        path.lineTo(x + 100,y);
+        path.lineTo(x + 200, y + 200);
+
+        canvas.drawPath(path,paint);
+
+        paint.setColor(Color.RED);
+        paint.setPathEffect(new CornerPathEffect(100));
+        canvas.drawPath(path,paint);
+
+        paint.setColor(Color.GREEN);
+        paint.setPathEffect(new CornerPathEffect(200));
+        canvas.drawPath(path,paint);
+    }
+
+    private void drawDashPathEffect(Canvas canvas, int x, int y) {
+        Paint paint = getPaint();
+        paint.setStrokeWidth(5);
+        paint.setColor(Color.BLACK);
+        paint.setStyle(Paint.Style.STROKE);
+
+        Path path = new Path();
+        path.moveTo(x, y + 200);
+        path.lineTo(x + 100,y);
+        path.lineTo(x + 200, y + 200);
+
+        canvas.drawPath(path,paint);
+        paint.setColor(Color.RED);
+        DashPathEffect effect = new DashPathEffect(new float[]{20,10, 50, 100},0);
+        //使用DashPathEffect画线段
+        paint.setPathEffect(effect);
+        canvas.translate(0,50);
+        canvas.drawPath(path,paint);
+
+
+        //画同一条线段,偏移值为15
+        effect = new DashPathEffect(new float[]{20,10, 50, 100},phase);
+        paint.setPathEffect(effect);
+        paint.setColor(Color.GREEN);
+        canvas.translate(0,50);
+        canvas.drawPath(path,paint);
+    }
+
+    float phase;
+    int maxPhase = 230;
+
+    public void startAnimatorPhase(float phase) {
+        this.phase = phase;
+        invalidate();
     }
 
     private void drawJoin(Canvas canvas, int x, int y) {
@@ -70,12 +190,15 @@ public class PaintView extends View {
         paint.setStrokeJoin(Paint.Join.MITER);
         canvas.drawPath(path, paint);
         x += 200;
+        canvas.drawRect(x, y, x + 80, y + 80, rectPaint);
         canvas.drawRect(x - gap / 2, y - gap/2, x + 80 + gap + 1, y + 80 + gap + 3, rectPaint);
+
 
         path.offset(200, 0);
         paint.setStrokeJoin(Paint.Join.ROUND);
         canvas.drawPath(path, paint);
         x += 200;
+        canvas.drawRect(x, y, x + 80, y + 80, rectPaint);
         canvas.drawRect(x - gap / 2, y - gap/2, x + 80 + gap, y + 80 + gap, rectPaint);
     }
 
@@ -120,6 +243,18 @@ public class PaintView extends View {
 
         paint.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(x + 250, y, radius, paint);
+    }
+
+    private Path getPath(int y){
+        Path path = new Path();
+        // 定义路径的起点
+        path.moveTo(0, y);
+
+        // 定义路径的各个点
+        for (int i = 0; i <= 40; i++) {
+            path.lineTo(i*35, y + (float) (Math.random() * 150));
+        }
+        return path;
     }
 
     private Paint getPaint() {

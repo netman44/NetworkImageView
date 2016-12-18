@@ -35,7 +35,7 @@
                 android:text="paint测试"
                 />
         </LinearLayout>
-
+        <include layout="@layout/coordinator_layout_test"></include>
     </LinearLayout>
 </ScrollView>
 
